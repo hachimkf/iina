@@ -11,6 +11,7 @@ public final class WyzieProvider: SubtitleProvider {
   public let id = "wyzie"
   public let name = "Wyzie"
 
+  private let defaultApiKey = "wyzie-bq24twq4t2issevral217hunx3jqdko2"
   private let endpoint = "https://sub.wyzie.io/search"
 
   public var isAvailable: Bool { true }
@@ -18,21 +19,45 @@ public final class WyzieProvider: SubtitleProvider {
   public init() {}
 
   public func search(request: SubtitleSearchRequest) async throws -> [SubtitleResult] {
-    guard let apiKey = request.providerKeys["wyzie"], !apiKey.trimmingCharacters(in: .whitespaces).isEmpty else {
-      throw NSError(domain: "Wyzie", code: 401, userInfo: [NSLocalizedDescriptionKey: "Wyzie requires an API key in Preferences (free from store.wyzie.io)"])
-    }
+    let rawKey = request.providerKeys["wyzie"]?.trimmingCharacters(in: .whitespaces) ?? ""
+    let apiKey = rawKey.isEmpty ? defaultApiKey : rawKey
 
     let registry = SubtitleLanguageRegistry.shared
     let langCode = registry.normalize(request.language)
     let langIso1 = registry.toIso639_1(langCode)
 
+    // Resolve IMDb ID for Wyzie if not already provided
+    var imdbId: String? = nil
+    if !request.cleanTitle.isEmpty {
+      let slug = request.cleanTitle.lowercased()
+        .components(separatedBy: CharacterSet.alphanumerics.inverted)
+        .filter { !$0.isEmpty }
+        .joined(separator: "_")
+      if let firstChar = slug.first,
+         let suggestURL = URL(string: "https://v2.sg.media-imdb.com/suggestion/\(firstChar)/\(slug).json") {
+        if let (sData, sResp) = try? await URLSession.shared.data(from: suggestURL),
+           (sResp as? HTTPURLResponse)?.statusCode == 200,
+           let sJson = try? JSONSerialization.jsonObject(with: sData) as? [String: Any],
+           let items = sJson["d"] as? [[String: Any]],
+           let first = items.first,
+           let id = first["id"] as? String, id.hasPrefix("tt") {
+          imdbId = id
+        }
+      }
+    }
+
+    guard let resolvedId = imdbId else {
+      return []
+    }
+
     var queryItems = [URLQueryItem]()
-    queryItems.append(URLQueryItem(name: "query", value: request.cleanTitle))
+    queryItems.append(URLQueryItem(name: "id", value: resolvedId))
     queryItems.append(URLQueryItem(name: "language", value: langIso1))
+    queryItems.append(URLQueryItem(name: "key", value: apiKey))
 
     if let season = request.season { queryItems.append(URLQueryItem(name: "season", value: String(season))) }
     if let episode = request.episode { queryItems.append(URLQueryItem(name: "episode", value: String(episode))) }
-    if let year = request.year { queryItems.append(URLQueryItem(name: "year", value: String(year))) }
+    if let year = request.year, !request.isEpisode { queryItems.append(URLQueryItem(name: "year", value: String(year))) }
 
     var components = URLComponents(string: endpoint)!
     components.queryItems = queryItems
@@ -44,7 +69,6 @@ public final class WyzieProvider: SubtitleProvider {
     var urlRequest = URLRequest(url: url)
     urlRequest.httpMethod = "GET"
     urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-    urlRequest.setValue(apiKey.trimmingCharacters(in: .whitespaces), forHTTPHeaderField: "x-api-key")
 
     let (data, response) = try await URLSession.shared.data(for: urlRequest)
 

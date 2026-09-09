@@ -11,6 +11,7 @@ public final class SubDLProvider: SubtitleProvider {
   public let id = "subdl"
   public let name = "SubDL"
 
+  private let defaultApiKey = "subdl_n-HMWshIn4Lewsa1Co6ZZiqjQOw_7lEYDFz7WMikVzs"
   private let endpoint = "https://api.subdl.com/api/v1/subtitles"
   private let downloadBase = "https://dl.subdl.com"
 
@@ -19,9 +20,8 @@ public final class SubDLProvider: SubtitleProvider {
   public init() {}
 
   public func search(request: SubtitleSearchRequest) async throws -> [SubtitleResult] {
-    guard let apiKey = request.providerKeys["subdl"], !apiKey.trimmingCharacters(in: .whitespaces).isEmpty else {
-      throw NSError(domain: "SubDL", code: 401, userInfo: [NSLocalizedDescriptionKey: "SubDL requires an API key in Preferences"])
-    }
+    let rawKey = request.providerKeys["subdl"]?.trimmingCharacters(in: .whitespaces) ?? ""
+    let apiKey = rawKey.isEmpty ? defaultApiKey : rawKey
 
     let registry = SubtitleLanguageRegistry.shared
     let langCode = registry.normalize(request.language)
