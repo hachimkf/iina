@@ -33,7 +33,7 @@ public final class SmartSubtitlesWindowController: NSWindowController, NSTableVi
   private var isSearching = false
   private var downloadingID: String?
 
-  public init(player: PlayerCore) {
+  init(player: PlayerCore) {
     self.player = player
 
     let window = NSWindow(
@@ -54,7 +54,7 @@ public final class SmartSubtitlesWindowController: NSWindowController, NSTableVi
     fatalError("init(coder:) has not been implemented")
   }
 
-  public static func show(for player: PlayerCore) {
+  static func show(for player: PlayerCore) {
     if shared == nil {
       shared = SmartSubtitlesWindowController(player: player)
     }
