@@ -1,7 +1,7 @@
 name: CI
 
 permissions:
-  contents: read
+  contents: write
 
 on:
   workflow_dispatch:
@@ -36,8 +36,18 @@ jobs:
         run: hdiutil create -volname "IINA Nightly" -srcfolder Build/Products/Nightly/IINA.app -ov -format UDZO IINA.dmg
 
       - name: Save artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: IINA
+          name: IINA-DMG
           path: IINA.dmg
-          archive: false
+
+      - name: Create Release
+        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/feature/smart-subtitle-search'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly-smart-subtitles
+          name: "IINA Nightly with Smart Subtitles"
+          body: "Automated nightly build of IINA with native Smart Subtitle Search engine."
+          files: IINA.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
