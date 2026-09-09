@@ -4,8 +4,9 @@ permissions:
   contents: read
 
 on:
+  workflow_dispatch:
   push:
-      branches: [develop]
+    branches: [develop, feature/smart-subtitle-search]
   pull_request:
       branches: [develop]
 
