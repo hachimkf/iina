@@ -254,6 +254,15 @@ struct Preference {
     static let defaultEncoding = Key("defaultEncoding")
     static let autoSearchOnlineSub = Key("autoSearchOnlineSub")
     static let autoSearchThreshold = Key("autoSearchThreshold")
+    static let smartSubAllowFallback = Key("smartSubAllowFallback")
+    static let smartSubProviderOpenSubtitles = Key("smartSubProviderOpenSubtitles")
+    static let smartSubProviderSubDL = Key("smartSubProviderSubDL")
+    static let smartSubProviderWyzie = Key("smartSubProviderWyzie")
+    static let smartSubSubDLApiKey = Key("smartSubSubDLApiKey")
+    static let smartSubWyzieApiKey = Key("smartSubWyzieApiKey")
+    static let smartSubAutoDownload = Key("smartSubAutoDownload")
+    static let smartSubAutoDownloadThreshold = Key("smartSubAutoDownloadThreshold")
+    static let smartSubSaveBesideVideo = Key("smartSubSaveBesideVideo")
 
     // Network
 
@@ -1206,6 +1215,15 @@ struct Preference {
     .defaultEncoding: "auto",
     .autoSearchOnlineSub: false,
     .autoSearchThreshold: 20,
+    .smartSubAllowFallback: false,
+    .smartSubProviderOpenSubtitles: true,
+    .smartSubProviderSubDL: true,
+    .smartSubProviderWyzie: true,
+    .smartSubSubDLApiKey: "",
+    .smartSubWyzieApiKey: "",
+    .smartSubAutoDownload: false,
+    .smartSubAutoDownloadThreshold: 85,
+    .smartSubSaveBesideVideo: false,
 
     .enableCache: true,
     .defaultCacheSize: 153600,

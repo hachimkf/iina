@@ -153,6 +153,20 @@ class SettingsPageSubtitles: SettingsPage {
           .image(name: ["text.magnifyingglass", "magnifyingglass"])
           .bindTo(.autoSearchOnlineSub)
           .hasDescription()
+        SettingsItem.Switch()
+          .image(name: "arrow.down.circle")
+          .bindTo(.smartSubAutoDownload)
+        SettingsItem.Input()
+          .image(name: "percent")
+          .bindTo(.smartSubAutoDownloadThreshold)
+          .range(50...100)
+          .trailingLabel(.text_Percent)
+        SettingsItem.Switch()
+          .image(name: "arrow.triangle.branch")
+          .bindTo(.smartSubAllowFallback)
+        SettingsItem.Switch()
+          .image(name: "folder")
+          .bindTo(.smartSubSaveBesideVideo)
       }
     }
   }
