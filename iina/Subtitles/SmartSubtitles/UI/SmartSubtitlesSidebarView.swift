@@ -7,7 +7,7 @@
 
 import Cocoa
 
-public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTableViewDataSource {
+final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTableViewDataSource {
 
   private unowned let player: PlayerCore
 
@@ -35,7 +35,7 @@ public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTab
 
   private var heightConstraint: NSLayoutConstraint?
 
-  public init(player: PlayerCore) {
+  init(player: PlayerCore) {
     self.player = player
     super.init(frame: .zero)
     setupUI()
@@ -59,7 +59,7 @@ public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTab
     startSearch()
   }
 
-  public func reset() {
+  func reset() {
     searchResults = []
     tableView.reloadData()
     updateHeight()
@@ -209,7 +209,7 @@ public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTab
     startSearch()
   }
 
-  public func startSearch() {
+  func startSearch() {
     guard let currentURL = player.info.currentURL else {
       headerLabel.stringValue = "No video opened"
       metaLabel.stringValue = "Open a video to search subtitles"
@@ -330,7 +330,7 @@ public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTab
     }
   }
 
-  public func downloadSubtitle(_ sub: SubtitleResult) {
+  func downloadSubtitle(_ sub: SubtitleResult) {
     guard downloadingID == nil else { return }
     downloadingID = sub.id
     statusIndicator.startAnimation(nil)
@@ -383,11 +383,11 @@ public final class SmartSubtitlesSidebarView: NSView, NSTableViewDelegate, NSTab
 
   // MARK: - NSTableViewDelegate & DataSource
 
-  public func numberOfRows(in tableView: NSTableView) -> Int {
+  func numberOfRows(in tableView: NSTableView) -> Int {
     return searchResults.count
   }
 
-  public func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+  func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
     let sub = searchResults[row]
     let identifier = NSUserInterfaceItemIdentifier("SidebarSubtitleCellView")
 
