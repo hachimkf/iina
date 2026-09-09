@@ -63,6 +63,10 @@ class SidebarSubtitlesPane: SidebarScrollView {
       $0.padding(.all(.sidebarContainerPadding))
     })
 
+    stack.addArrangedSubview(Container(SmartSubtitlesSidebarView(player: player)) {
+      $0.padding(.all(.sidebarContainerPadding))
+    })
+
     stack.addArrangedSubview(Container(SubPositionDelayView(player: player)) {
       $0.padding(.all(.sidebarContainerPadding))
     })

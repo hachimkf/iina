@@ -402,7 +402,8 @@ extension MainMenuActionHandler {
 
   @objc func menuFindOnlineSub(_ sender: NSMenuItem) {
     guard player.info.currentURL != nil else { return }
-    SmartSubtitlesWindowController.show(for: player)
+    player.mainWindow.sidebars.show(sidebar: .settings, tab: "sub")
+    NotificationCenter.default.post(name: .iinaTriggerSmartSubSearch, object: nil)
   }
 
   @objc func saveDownloadedSub(_ sender: NSMenuItem) {

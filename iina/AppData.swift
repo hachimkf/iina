@@ -171,6 +171,7 @@ extension Notification.Name {
   static let iinaFullscreenChanged = Notification.Name("iinaFullscreenChanged")
   static let iinaSidebarStatusChanged = Notification.Name("iinaSidebarStatusChanged")
   static let iinaLogAppended = Notification.Name("iinaLogAppended")
+  static let iinaTriggerSmartSubSearch = Notification.Name("iinaTriggerSmartSubSearch")
 }
 
 enum IINAError: Error {
